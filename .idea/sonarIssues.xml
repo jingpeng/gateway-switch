@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="issues">
+    <option name="index">
+      <map>
+        <entry key="$PROJECT_DIR$/../flower-merchant-web/src/main/java/com/dianping/flower/api/SearchFlowerDeliveryOrderAPI.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../flower-merchant-web/src/main/java/com/dianping/flower/facade/impl/FlowerDeliveryOrderFacadeImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../flower-web/src/main/java/com/dianping/flower/web/mapi/FetchFlowerDealGroupList.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../flower-web/src/main/java/com/dianping/flower/web/service/dealgroup/FlowerDealGroupServiceImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gateway/src/edu/tongji/Constants.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gateway/src/edu/tongji/GatewayHandler.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gateway/src/edu/tongji/GatewayServer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../vc-easylife-api/src/main/java/com/dianping/easylife/api/FetchRecommendShopList.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../vc-easylife-api/src/main/java/com/dianping/easylife/api/FetchTuangouList.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../vc-easylife-api/src/main/resources/config/spring/local/appcontext-client.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
