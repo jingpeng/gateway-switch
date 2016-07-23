@@ -1,4 +1,4 @@
-package edu.tongji;
+package edu.tongji.client;
 
 import java.io.IOException;
 import java.io.OutputStream;

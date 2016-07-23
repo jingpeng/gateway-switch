@@ -38,6 +38,31 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/gateway/src/edu/tongji/client/LockClient.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gateway/src/edu/tongji/server/Constants.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gateway/src/edu/tongji/server/GatewayHandler.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gateway/src/edu/tongji/server/GatewayServer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/gateway/src/edu/tongji/server/LockClient.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../vc-easylife-api/src/main/java/com/dianping/easylife/api/FetchRecommendShopList.java">
           <value>
             <set />

@@ -1,4 +1,4 @@
-package edu.tongji;
+package edu.tongji.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,9 +12,7 @@ public class GatewayServer {
 
     private static final int SERVER_PORT = 6600;
 
-    private static final int UPLOAD_DATA_COUNT = 13;
-
-    private final int POOL_SIZE = 2;//单个CPU线程池大小
+    private final int POOL_SIZE = 10;//单个CPU线程池大小
 
     ServerSocket serverSocket = null;
 

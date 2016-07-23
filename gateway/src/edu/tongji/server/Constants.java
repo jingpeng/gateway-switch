@@ -1,4 +1,4 @@
-package edu.tongji;
+package edu.tongji.server;
 
 /**
  * Created by mi.li on 16/7/23.
