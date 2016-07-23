@@ -1,5 +1,7 @@
 package edu.tongji.server;
 
+import com.alibaba.fastjson.JSON;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
@@ -11,8 +13,9 @@ import java.util.Map;
 public class GatewayHandler implements Runnable {
     private Socket socket;
     private String ip;
+    private String port;
 
-    private Map<String, String> IDIPMap = new HashMap<>();
+    private Map<Integer, String> idMapToIpPort = new HashMap<>();
 
     int count = 0;
 
@@ -21,6 +24,7 @@ public class GatewayHandler implements Runnable {
     GatewayHandler(Socket socket) {
         this.socket = socket;
         this.ip = socket.getInetAddress().getHostAddress();
+        this.port = Integer.toString(socket.getPort());
     }
 
     @Override
@@ -36,8 +40,10 @@ public class GatewayHandler implements Runnable {
                 }
                 if (count == Constants.UPLOAD_DATA_COUNT) {
                     count = 0;
-                    buildIDIPMap(data);
-                    uploadData(data);
+                    if (checkCRC(data)) {
+                        buildIDMapToIpPort(data);
+                        uploadData(data);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -46,23 +52,46 @@ public class GatewayHandler implements Runnable {
     }
 
     private void uploadData(int[] data) {
-
         for (int i = 0; i != data.length; i++) {
             System.out.print(data[i]);
         }
         System.out.println();
+        Map dataPack = new HashMap<>();
+        dataPack.put("gatewayID", data[2] * 256 + data[3]);
+        dataPack.put("action", data[4]);
+        switch (data[4]) {
+            //网关上线
+            case 0X30:
+            //网关下线
+            case 0X31:
+                break;
+            //设备上线
+            case 0X33:
+            //设备下线
+            case 0X34:
+            //设备事件
+            case 0X55:
+                dataPack.put("deviceID", data[5] * 256 + data[6]);
+                dataPack.put("deviceControlStatus", data[7]);
+                dataPack.put("MCOpen", data[8]);
+        }
+        String json = JSON.toJSONString(dataPack);
+
     }
 
-    private void buildIDIPMap(int[] data) {
-        StringBuilder id = new StringBuilder();
-        for (int i = 2; i <= 3; i++) {
-            id.append(data[i]);
+    private void buildIDMapToIpPort(int[] data) {
+        Integer id = data[2] * 256 + data[3];
+        if (!idMapToIpPort.containsKey(id)) {
+            idMapToIpPort.put(id, ip + ":" + port);
         }
-        if (!IDIPMap.containsKey(id)) {
-            IDIPMap.put(id.toString(),ip);
-        }
+    }
+
+    private boolean checkCRC(int[] data) {
+        //TODO
+
+
+        return true;
     }
 }
-
 
 
