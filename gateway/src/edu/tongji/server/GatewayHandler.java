@@ -34,20 +34,48 @@ public class GatewayHandler implements Runnable {
             try {
                 value = socket.getInputStream().read();
 
-                if (value != -1) {
-                    data[count] = value;
-                    count++;
-                }
-                if (count == Constants.UPLOAD_DATA_COUNT) {
-                    count = 0;
-                    if (checkCRC(data)) {
-                        buildIDMapToIpPort(data);
-                        uploadData(data);
+                //检查是否为数据开头
+                if (value == 0xFF) {
+                    value = socket.getInputStream().read();
+                    if (value == 0xFF) {
+                        //数据开始
+                        data[0] = 0xFF;
+                        data[1] = 0xFF;
+                        count = 2;
+                        continue;
+                    } else {
+                        //如果不是连续两个FF，则不是数据开头，需要按常规处理前一个0xFF
+                        handleValue(0xFF);
                     }
                 }
+
+                //检测是否为数据结尾
+                if (value == 0x0D) {
+                    value = socket.getInputStream().read();
+                    if (value == 0x0A) {
+                        if (checkCRC(data)) {
+                            buildIDMapToIpPort(data);
+                            uploadData(data);
+                        }
+                        //无论校验过不过都需重置data
+                        count = 0;
+                    } else {
+                        //如果不是0x0D + 0x0A, 则不是数据结尾，需要按常规处理前一个0x0D
+                        handleValue(0x0D);
+                    }
+                }
+                handleValue(value);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void handleValue(int value) {
+        if (value != -1) {
+            data[count] = value;
+            count++;
         }
     }
 
@@ -57,25 +85,30 @@ public class GatewayHandler implements Runnable {
         }
         System.out.println();
         Map dataPack = new HashMap<>();
+        dataPack.put("ip", ip);
+        dataPack.put("port", port);
         dataPack.put("gatewayID", data[2] * 256 + data[3]);
         dataPack.put("action", data[4]);
+
         switch (data[4]) {
             //网关上线
             case 0X30:
-            //网关下线
+                //网关下线
             case 0X31:
                 break;
             //设备上线
             case 0X33:
-            //设备下线
+                //设备下线
             case 0X34:
-            //设备事件
+                //设备事件
             case 0X55:
                 dataPack.put("deviceID", data[5] * 256 + data[6]);
                 dataPack.put("deviceControlStatus", data[7]);
                 dataPack.put("MCOpen", data[8]);
         }
         String json = JSON.toJSONString(dataPack);
+
+        //TODO: 发送消息
 
     }
 
@@ -87,7 +120,7 @@ public class GatewayHandler implements Runnable {
     }
 
     private boolean checkCRC(int[] data) {
-        //TODO
+        //TODO: CRC校验
 
 
         return true;

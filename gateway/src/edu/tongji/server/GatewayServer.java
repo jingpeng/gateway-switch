@@ -10,9 +10,7 @@ import java.util.concurrent.Executors;
 
 public class GatewayServer {
 
-    private static final int SERVER_PORT = 6600;
 
-    private final int POOL_SIZE = 10;//单个CPU线程池大小
 
     ServerSocket serverSocket = null;
 
@@ -22,9 +20,9 @@ public class GatewayServer {
 
     public GatewayServer() {
         try {
-            serverSocket = new ServerSocket(SERVER_PORT);
+            serverSocket = new ServerSocket(Constants.SERVER_PORT);
             //Runtime的availableProcessor()方法返回当前系统的CPU数目.
-            executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * POOL_SIZE);
+            executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * Constants.POOL_SIZE);
             System.out.println("服务器启动");
         } catch (IOException e) {
             e.printStackTrace();
