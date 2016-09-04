@@ -1,13 +1,10 @@
 package edu.tongji.reserve;
 
 import edu.tongji.common.Configs;
-import edu.tongji.server.GatewayHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,7 +31,6 @@ public class ReverseServer {
         while (true) {
             Socket socket = null;
             try {
-                //接收客户连接,只要客户进行了连接,就会触发accept();从而建立连接
                 socket = serverSocket.accept();
                 executorService.execute(new ReverseHandler(socket));
             } catch (Exception e) {
