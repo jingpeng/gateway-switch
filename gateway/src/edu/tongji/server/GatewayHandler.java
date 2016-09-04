@@ -125,6 +125,7 @@ public class GatewayHandler implements Runnable {
             OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream(), "utf-8");
             osw.write(json);
             osw.flush();
+            osw.close();
         } catch(Exception e){
             System.out.println("http请求发送失败");
         }
