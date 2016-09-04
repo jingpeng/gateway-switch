@@ -1,6 +1,8 @@
 package edu.tongji.server;
 
 import com.alibaba.fastjson.JSON;
+import edu.tongji.common.CommonUtils;
+import edu.tongji.common.Configs;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -17,8 +19,6 @@ public class GatewayHandler implements Runnable {
     private Socket socket;
     private String ip;
     private String port;
-
-    private Map<Integer, String> idMapToIpPort = new HashMap<>();
 
     int count = 0;
 
@@ -38,17 +38,17 @@ public class GatewayHandler implements Runnable {
                 value = socket.getInputStream().read();
 
                 //检查是否为数据开头
-                if (value == 0xFF) {
+                if (value == 0x7F) {
                     value = socket.getInputStream().read();
-                    if (value == 0xFF) {
+                    if (value == 0x7F) {
                         //数据开始
-                        data[0] = 0xFF;
-                        data[1] = 0xFF;
+                        data[0] = 0x7F;
+                        data[1] = 0x7F;
                         count = 2;
                         continue;
                     } else {
                         //如果不是连续两个FF，则不是数据开头，需要按常规处理前一个0xFF
-                        handleValue(0xFF);
+                        handleValue(0x7F);
                     }
                 }
 
@@ -56,9 +56,10 @@ public class GatewayHandler implements Runnable {
                 if (value == 0x0D) {
                     value = socket.getInputStream().read();
                     if (value == 0x0A) {
-                        if (checkCRC(data)) {
+                        if (CommonUtils.checkCRC(data)) {
                             buildIDMapToIpPort(data);
                             String json = generateJson(data);
+                            System.out.println(json);
                             uploadJson(json);
                         }
                         //无论校验过不过都需重置data
@@ -131,16 +132,9 @@ public class GatewayHandler implements Runnable {
 
     private void buildIDMapToIpPort(int[] data) {
         Integer id = data[2] * 256 + data[3];
-        if (!idMapToIpPort.containsKey(id)) {
-            idMapToIpPort.put(id, ip + ":" + port);
+        if (!Configs.idMapToIpPort.containsKey(id)) {
+            Configs.idMapToIpPort.put(id, ip + ":" + port);
         }
-    }
-
-    private boolean checkCRC(int[] data) {
-        //TODO: CRC校验
-
-
-        return true;
     }
 }
 

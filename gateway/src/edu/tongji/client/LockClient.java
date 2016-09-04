@@ -1,6 +1,6 @@
 package edu.tongji.client;
 
-import edu.tongji.server.Configs;
+import edu.tongji.common.Configs;
 
 import java.io.IOException;
 import java.io.OutputStream;
