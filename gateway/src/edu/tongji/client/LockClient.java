@@ -1,5 +1,7 @@
 package edu.tongji.client;
 
+import edu.tongji.server.Configs;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -7,9 +9,7 @@ import java.net.Socket;
 import java.util.Arrays;
 
 public class LockClient {
-	private static final String SERVER_IP = "127.0.0.1";
-
-	private static final int SERVER_PORT = 6600;
+	private static final String SWITCH_IP = "127.0.0.1";
 
 	private byte[] gatewayOnlineData = { 0X7F, 0X7F, // 开始标志
 			(byte) 0XFF, (byte) 0XFF, // 设备区域ID
@@ -29,7 +29,7 @@ public class LockClient {
 
 	public void connect() {
 		try {
-			Socket socket = new Socket(InetAddress.getByName(SERVER_IP), SERVER_PORT);
+			Socket socket = new Socket(InetAddress.getByName(SWITCH_IP), Configs.SWITCH_PORT);
 			OutputStream out = socket.getOutputStream();
 			out.write(concatAll(gatewayOnlineData, deviceRegisterData));
 			socket.close();

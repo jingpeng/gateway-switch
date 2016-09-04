@@ -3,7 +3,10 @@ package edu.tongji.server;
 import com.alibaba.fastjson.JSON;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +22,7 @@ public class GatewayHandler implements Runnable {
 
     int count = 0;
 
-    int[] data = new int[Constants.UPLOAD_DATA_COUNT];
+    int[] data = new int[Configs.UPLOAD_DATA_COUNT];
 
     GatewayHandler(Socket socket) {
         this.socket = socket;
@@ -55,7 +58,8 @@ public class GatewayHandler implements Runnable {
                     if (value == 0x0A) {
                         if (checkCRC(data)) {
                             buildIDMapToIpPort(data);
-                            uploadData(data);
+                            String json = generateJson(data);
+                            uploadJson(json);
                         }
                         //无论校验过不过都需重置data
                         count = 0;
@@ -79,7 +83,7 @@ public class GatewayHandler implements Runnable {
         }
     }
 
-    private void uploadData(int[] data) {
+    private String generateJson(int[] data) {
         for (int i = 0; i != data.length; i++) {
             System.out.print(data[i]);
         }
@@ -93,23 +97,36 @@ public class GatewayHandler implements Runnable {
         switch (data[4]) {
             //网关上线
             case 0X30:
-                //网关下线
+            //网关下线
             case 0X31:
                 break;
             //设备上线
             case 0X33:
-                //设备下线
+            //设备下线
             case 0X34:
-                //设备事件
+            //设备事件
             case 0X55:
                 dataPack.put("deviceID", data[5] * 256 + data[6]);
                 dataPack.put("deviceControlStatus", data[7]);
                 dataPack.put("MCOpen", data[8]);
         }
-        String json = JSON.toJSONString(dataPack);
+        return JSON.toJSONString(dataPack);
+    }
 
-        //TODO: 发送消息
-
+    private void uploadJson(String json) {
+        try {
+            URL url = new URL(Configs.SERVER_IP + ":" + Configs.SERVER_PORT);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("POST");
+            con.setDoInput(true);
+            con.setUseCaches(false);
+            con.setRequestProperty("Content-Type", "application/json");
+            OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream(), "utf-8");
+            osw.write(json);
+            osw.flush();
+        } catch(Exception e){
+            System.out.println("http请求发送失败");
+        }
     }
 
     private void buildIDMapToIpPort(int[] data) {
