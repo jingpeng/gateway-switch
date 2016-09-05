@@ -16,8 +16,6 @@ public class GatewayServer {
 
     private ExecutorService executorService;//线程池
 
-    private Map<Integer, Integer> IpGateWayIDap = new HashMap<Integer, Integer>();
-
     public GatewayServer() {
         try {
             serverSocket = new ServerSocket(Configs.SWITCH_PORT);

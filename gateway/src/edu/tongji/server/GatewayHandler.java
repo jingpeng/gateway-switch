@@ -47,7 +47,7 @@ public class GatewayHandler implements Runnable {
                         count = 2;
                         continue;
                     } else {
-                        //如果不是连续两个FF，则不是数据开头，需要按常规处理前一个0xFF
+                        //如果不是连续两个7F，则不是数据开头，需要按常规处理前一个0x7F
                         handleValue(0x7F);
                     }
                 }
