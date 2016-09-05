@@ -19,8 +19,7 @@ public class GatewayServer {
     public GatewayServer() {
         try {
             serverSocket = new ServerSocket(Configs.SWITCH_PORT);
-            //Runtime的availableProcessor()方法返回当前系统的CPU数目.
-            executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * Configs.POOL_SIZE);
+            executorService = Executors.newFixedThreadPool(Configs.POOL_SIZE);
             System.out.println("转换器启动");
         } catch (IOException e) {
             e.printStackTrace();
@@ -31,7 +30,6 @@ public class GatewayServer {
         while (true) {
             Socket socket = null;
             try {
-                //接收客户连接,只要客户进行了连接,就会触发accept();从而建立连接
                 socket = serverSocket.accept();
                 executorService.execute(new GatewayHandler(socket));
             } catch (Exception e) {

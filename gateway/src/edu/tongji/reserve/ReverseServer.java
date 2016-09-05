@@ -19,8 +19,7 @@ public class ReverseServer {
     public ReverseServer() {
         try {
             serverSocket = new ServerSocket(Configs.SERVER_PORT);
-            //Runtime的availableProcessor()方法返回当前系统的CPU数目.
-            executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * Configs.POOL_SIZE);
+            executorService = Executors.newFixedThreadPool(Configs.POOL_SIZE);
             System.out.println("反向控制器启动");
         } catch (IOException e) {
             e.printStackTrace();
