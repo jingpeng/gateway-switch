@@ -21,8 +21,9 @@ public class LockClient {
 
 	private byte[] deviceRegisterData = { 0X7F, 0X7F, // 开始标志
 			(byte) 0XFF, (byte) 0XFF, // 设备区域ID
-			0X30, // 上线或下线
-			0X00, 0X00, 0X00, 0X00, // 空
+			0X33, // 上线或下线
+			0X11, 0X22, //设备ID
+			0X00, 0X00, // 空
 			0X6F, 0X6F, // CRC数据校验
 			0X0D, 0X0A // 结束标志
 	};
@@ -31,7 +32,8 @@ public class LockClient {
 		try {
 			Socket socket = new Socket(InetAddress.getByName(SWITCH_IP), Configs.SWITCH_PORT);
 			OutputStream out = socket.getOutputStream();
-			out.write(concatAll(gatewayOnlineData, deviceRegisterData));
+			//out.write(concatAll(gatewayOnlineData, deviceRegisterData));
+			out.write(gatewayOnlineData);
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();

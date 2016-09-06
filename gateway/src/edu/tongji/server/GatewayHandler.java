@@ -1,11 +1,9 @@
 package edu.tongji.server;
 
-import com.alibaba.fastjson.JSON;
 import edu.tongji.common.CommonUtils;
 import edu.tongji.common.Configs;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
@@ -56,11 +54,10 @@ public class GatewayHandler implements Runnable {
                 if (value == 0x0D) {
                     value = socket.getInputStream().read();
                     if (value == 0x0A) {
-                        if (CommonUtils.checkCRC(data)) {
+                        if (CommonUtils.checkUploadCRC(data)) {
                             buildIDMapToIpPort(data);
-                            String json = generateJson(data);
-                            System.out.println(json);
-                            uploadJson(json);
+                            Map<String ,String> map = generateJson(data);
+                            uploadJson(map);
                         }
                         //无论校验过不过都需重置data
                         count = 0;
@@ -84,16 +81,16 @@ public class GatewayHandler implements Runnable {
         }
     }
 
-    private String generateJson(int[] data) {
+    private Map<String,String> generateJson(int[] data) {
         for (int i = 0; i != data.length; i++) {
             System.out.print(data[i]);
         }
         System.out.println();
         Map dataPack = new HashMap<>();
-        dataPack.put("ip", ip);
-        dataPack.put("port", port);
-        dataPack.put("gatewayID", data[2] * 256 + data[3]);
-        dataPack.put("action", data[4]);
+        //dataPack.put("ip", ip);
+        //dataPack.put("port", port);
+        dataPack.put("lockArea", data[2] * 256 + data[3]);
+        dataPack.put("eventType", data[4]);
 
         switch (data[4]) {
             //网关上线
@@ -107,25 +104,29 @@ public class GatewayHandler implements Runnable {
             case 0X34:
             //设备事件
             case 0X55:
-                dataPack.put("deviceID", data[5] * 256 + data[6]);
-                dataPack.put("deviceControlStatus", data[7]);
-                dataPack.put("MCOpen", data[8]);
+                dataPack.put("lockNum", data[5] * 256 + data[6]);
+                dataPack.put("state", data[7]);
+                dataPack.put("mcOpen", data[8]);
         }
-        return JSON.toJSONString(dataPack);
+        return dataPack;
     }
 
-    private void uploadJson(String json) {
+    private void uploadJson(Map<String,String> map) {
         try {
-            URL url = new URL(Configs.SERVER_IP + ":" + Configs.SERVER_PORT);
+            StringBuilder sb = new StringBuilder();
+            sb.append(Configs.UPLOAD_URL);
+            sb.append("?");
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                sb.append(entry.getKey() + "=" + String.valueOf(entry.getValue()));
+                sb.append("&");
+            }
+            System.out.println(sb.toString());
+            URL url = new URL(sb.toString());
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setDoInput(true);
+            con.setRequestMethod("GET");
             con.setUseCaches(false);
-            con.setRequestProperty("Content-Type", "application/json");
-            OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream(), "utf-8");
-            osw.write(json);
-            osw.flush();
-            osw.close();
+            con.connect();
+            con.getInputStream();
         } catch(Exception e){
             System.out.println("http请求发送失败");
         }

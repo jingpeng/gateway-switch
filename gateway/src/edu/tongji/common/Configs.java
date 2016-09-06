@@ -28,4 +28,7 @@ public class Configs {
 
     //地锁IP ID map
     public static Map<Integer, String> idMapToIpPort = new HashMap<>();
+
+    //上报服务器地址
+    public static String UPLOAD_URL = "tingche.tongji.edu.cn/httpservices/client/locked/event/new";
 }

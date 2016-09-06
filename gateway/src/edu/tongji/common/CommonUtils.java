@@ -35,6 +35,10 @@ public class CommonUtils {
             if(null != pool_size){
                 Configs.POOL_SIZE = Integer.valueOf(pool_size);
             }
+            String upload_url = pro.getProperty("UPLOAD_URL");
+            if(null != upload_url){
+                Configs.UPLOAD_URL = upload_url;
+            }
             in.close();
         } catch (FileNotFoundException e) {
             System.out.println("配置文件读取失败，采用默认配置");
@@ -43,10 +47,27 @@ public class CommonUtils {
         }
     }
 
-    public static boolean checkCRC(int[] data) {
-        //TODO: CRC校验
+    public static byte[] intToByte(int number) {
+        byte[] abyte = new byte[4];
+        // "&" 与（AND），对两个整型操作数中对应位执行布尔代数，两个位都为1时输出1，否则0。
+        abyte[0] = (byte) (0xff & number);
+        // ">>"右移位，若为正数则高位补0，若为负数则高位补1
+        abyte[1] = (byte) ((0xff00 & number) >> 8);
+        abyte[2] = (byte) ((0xff0000 & number) >> 16);
+        abyte[3] = (byte) ((0xff000000 & number) >> 24);
+        return abyte;
+    }
 
+    public static boolean checkUploadCRC(int[] data) {
+        return CRC(data) == data[9] * 256 + data[10];
+    }
 
-        return true;
+    public static boolean checkReverseCRC(int[] data){
+        return CRC(data) == data[7] * 256 + data[8];
+     }
+
+    public static int CRC(int[] data){
+        //TODO:CRC校验算法
+        return 0;
     }
 }

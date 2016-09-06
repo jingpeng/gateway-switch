@@ -10,7 +10,7 @@ import edu.tongji.server.GatewayServer;
 public class Main {
     public static void main(String[] args) {
         CommonUtils.loadConfigs();
-        GatewayServer server = new GatewayServer();
+        final GatewayServer server = new GatewayServer();
         Thread serverThread = new Thread(){
             public void run(){
                 server.service();
@@ -18,7 +18,7 @@ public class Main {
         };
         serverThread.start();
 
-        ReverseServer reverseServer = new ReverseServer();
+        final ReverseServer reverseServer = new ReverseServer();
         Thread reverseServerThread = new Thread(){
             public void run(){
                 reverseServer.service();
