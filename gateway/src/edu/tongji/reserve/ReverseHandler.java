@@ -6,6 +6,7 @@ import edu.tongji.common.Configs;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,36 +31,42 @@ public class ReverseHandler implements Runnable {
                 if (line.startsWith("GET /reverse?")) {
                     String dataStr = line.substring(line.lastIndexOf("GET /reverse?") + 13,
                             line.indexOf("HTTP") - 1);
-                    Map<String, String> map = new HashMap<String, String>();
+                    Map<String, String[]> map = new HashMap<>();
                     String[] dataStrs = dataStr.split("&");
 
                     for (int i = 0; i < dataStrs.length; i++) {
                         if (dataStrs[i].startsWith("lockArea=")) {
-                            map.put("lockArea",dataStrs[i].substring(9,dataStrs[i].length()));
+                            map.put("lockArea", dataStrs[i].substring(9, dataStrs[i].length()).split(","));
                         } else if (dataStrs[i].startsWith("lockNum=")) {
-                            map.put("lockNum",dataStrs[i].substring(8,dataStrs[i].length()));
+                            map.put("lockNum", dataStrs[i].substring(8, dataStrs[i].length()).split(","));
                         } else if ((dataStrs[i].startsWith("eventType="))) {
-                            map.put("eventType",dataStrs[i].substring(10,dataStrs[i].length()));
+                            String[] eventType = {dataStrs[i].substring(10, dataStrs[i].length())};
+                            map.put("eventType", eventType);
                         }
                     }
-                    generateBytes(map);
-                    upload(data);
+                    for (int i = 0; i < map.get("lockArea").length; i++) {
+                        generateBytes(map, i);
+                        upload(data);
+                        Thread.sleep(500);
+                    }
                 }
                 line = bd.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
-    private void generateBytes(Map<String,String> map ){
+    private void generateBytes(Map<String, String[]> map, int i) {
         data[0] = 0x7F;
         data[1] = 0x7F;
-        data[2] = CommonUtils.intToByte(Integer.valueOf(map.get("lockArea")))[1];
-        data[3] = CommonUtils.intToByte(Integer.valueOf(map.get("lockArea")))[0];
-        data[4] = CommonUtils.intToByte(Integer.valueOf(map.get("lockNum")))[1];
-        data[5] = CommonUtils.intToByte(Integer.valueOf(map.get("lockNum")))[0];
-        data[6] = CommonUtils.intToByte(Integer.valueOf(map.get("eventType")))[0];
+        data[2] = CommonUtils.intToByte(Integer.valueOf(map.get("lockArea")[i]))[1];
+        data[3] = CommonUtils.intToByte(Integer.valueOf(map.get("lockArea")[i]))[0];
+        data[4] = CommonUtils.intToByte(Integer.valueOf(map.get("lockNum")[i]))[1];
+        data[5] = CommonUtils.intToByte(Integer.valueOf(map.get("lockNum")[i]))[0];
+        data[6] = CommonUtils.intToByte(Integer.valueOf(map.get("eventType")[0]))[0];
         data[7] = CommonUtils.intToByte(CommonUtils.CRC(data))[1];
         data[8] = CommonUtils.intToByte(CommonUtils.CRC(data))[0];
         data[9] = 0x0D;
