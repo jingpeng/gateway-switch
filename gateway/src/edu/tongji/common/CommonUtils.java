@@ -55,17 +55,17 @@ public class CommonUtils {
             if (null != switch_port) {
                 Configs.SWITCH_PORT = Integer.valueOf(switch_port);
             }
+            String switch_ip = pro.getProperty("SWITCH_IP");
+            if (null != switch_ip) {
+                Configs.SWITCH_IP = switch_ip;
+            }
             String reverse_port = pro.getProperty("REVERSE_PORT");
             if (null != reverse_port) {
                 Configs.REVERSE_PORT = Integer.valueOf(reverse_port);
             }
-            String server_ip = pro.getProperty("SERVER_IP");
-            if (null != server_ip) {
-                Configs.SERVER_IP = server_ip;
-            }
-            String server_port = pro.getProperty("SERVER_PORT");
-            if (null != server_port) {
-                Configs.SERVER_PORT = Integer.valueOf(server_port);
+            String reverse_ip = pro.getProperty("REVERSE_IP");
+            if (null != reverse_ip) {
+                Configs.REVERSE_IP = reverse_ip;
             }
             String pool_size = pro.getProperty("POOL_SIZE");
             if (null != pool_size) {
@@ -95,7 +95,8 @@ public class CommonUtils {
     }
 
     public static boolean checkUploadCRC(int[] data) {
-        return CRC(data) == data[9] * 256 + data[10];
+        //return CRC(data) == data[9] * 256 + data[10];
+        return true;
     }
 
     public static boolean checkReverseCRC(int[] data) {
@@ -109,7 +110,7 @@ public class CommonUtils {
         for (int i = 0; i < length; i++) {
             crc_H8 = crc >> 8;
             crc = crc << 8;
-            crc = crc ^ crc_table[ crc_H8 ^ data[i]];
+            crc = crc | crc_table[ crc_H8 | data[i]];
         }
         crc = crc & 0xffff;
         return crc;

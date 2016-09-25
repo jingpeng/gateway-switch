@@ -67,8 +67,8 @@ public class ReverseHandler implements Runnable {
         data[4] = CommonUtils.intToByte(Integer.valueOf(map.get("lockNum")[i]))[1];
         data[5] = CommonUtils.intToByte(Integer.valueOf(map.get("lockNum")[i]))[0];
         data[6] = CommonUtils.intToByte(Integer.valueOf(map.get("eventType")[0]))[0];
-        data[7] = CommonUtils.intToByte(CommonUtils.CRC(data))[1];
-        data[8] = CommonUtils.intToByte(CommonUtils.CRC(data))[0];
+        data[7] = 0;//CommonUtils.intToByte(CommonUtils.CRC(data))[1];
+        data[8] = 0;//CommonUtils.intToByte(CommonUtils.CRC(data))[0];
         data[9] = 0x0D;
         data[10] = 0x0D;
     }

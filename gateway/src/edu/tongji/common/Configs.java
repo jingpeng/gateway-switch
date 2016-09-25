@@ -11,14 +11,14 @@ public class Configs {
     //转换器端口号
     public static int SWITCH_PORT = 6600;
 
+    //转换器IP
+    public static String SWITCH_IP = "172.16.20.12";
+
     //反向控制端口号
     public static int REVERSE_PORT = 8080;
 
-    //服务器ip
-    public static String SERVER_IP = "10.60.30.4";
-
-    //服务器端口号
-    public static int SERVER_PORT = 8080;
+    //反向控制IP
+    public static String REVERSE_IP = "127.0.0.1";
 
     //单个CPU线程池大小
     public static int POOL_SIZE = 10;

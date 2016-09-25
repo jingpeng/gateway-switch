@@ -3,6 +3,7 @@ package edu.tongji.reserve;
 import edu.tongji.common.Configs;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -18,7 +19,7 @@ public class ReverseServer {
 
     public ReverseServer() {
         try {
-            serverSocket = new ServerSocket(Configs.SERVER_PORT);
+            serverSocket = new ServerSocket(Configs.REVERSE_PORT, 50, InetAddress.getByName(Configs.REVERSE_IP));
             executorService = Executors.newFixedThreadPool(Configs.POOL_SIZE);
             System.out.println("反向控制器启动");
         } catch (IOException e) {

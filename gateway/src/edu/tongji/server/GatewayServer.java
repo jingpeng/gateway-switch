@@ -3,6 +3,8 @@ package edu.tongji.server;
 import edu.tongji.common.Configs;
 
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -16,7 +18,7 @@ public class GatewayServer {
 
     public GatewayServer() {
         try {
-            serverSocket = new ServerSocket(Configs.SWITCH_PORT);
+            serverSocket = new ServerSocket(Configs.SWITCH_PORT, 50, InetAddress.getByName(Configs.SWITCH_IP));
             executorService = Executors.newFixedThreadPool(Configs.POOL_SIZE);
             System.out.println("转换器启动");
         } catch (IOException e) {
