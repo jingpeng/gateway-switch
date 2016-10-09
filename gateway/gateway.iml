@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$MODULE_DIR$/lib/fastjson-1.2.9.jar!/" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
+    </src_description>
+  </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/bin" />
     <exclude-output />
@@ -9,20 +15,13 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="module-library">
-      <library>
+      <library name="fastjson-1.2.9.jar">
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/fastjson-1.2.9.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/fastjson-1.2.9.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-  </component>
-  <component name="sonarModuleSettings">
-    <option name="alternativeWorkingDirPath" value="" />
-    <option name="localAnalysisScripName" value="&lt;PROJECT&gt;" />
-    <option name="serverName" value="&lt;PROJECT&gt;" />
-    <option name="useAlternativeWorkingDir" value="false" />
-    <option name="workingDirSelection" value="&lt;MODULE&gt;" />
   </component>
 </module>

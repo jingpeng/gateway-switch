@@ -1,5 +1,6 @@
 package edu.tongji.reserve;
 
+import edu.tongji.common.CRCTool;
 import edu.tongji.common.CommonUtils;
 import edu.tongji.common.Configs;
 
@@ -46,7 +47,10 @@ public class ReverseHandler implements Runnable {
                     }
                     for (int i = 0; i < map.get("lockArea").length; i++) {
                         generateBytes(map, i);
-                        upload(data);
+                        if(CommonUtils.checkReverseCRC(data)){
+                        	upload(data);
+                        }
+                        System.out.println("CRC校验失败[" + data + "]");
                         Thread.sleep(500);
                     }
                 }
@@ -67,16 +71,15 @@ public class ReverseHandler implements Runnable {
         data[4] = CommonUtils.intToByte(Integer.valueOf(map.get("lockNum")[i]))[1];
         data[5] = CommonUtils.intToByte(Integer.valueOf(map.get("lockNum")[i]))[0];
         data[6] = CommonUtils.intToByte(Integer.valueOf(map.get("eventType")[0]))[0];
-        data[7] = 0;//CommonUtils.intToByte(CommonUtils.CRC(data))[1];
-        data[8] = 0;//CommonUtils.intToByte(CommonUtils.CRC(data))[0];
+        data[7] = CommonUtils.intToByte(CRCTool.calcCrc16(data))[1];
+        data[8] = CommonUtils.intToByte(CRCTool.calcCrc16(data))[0];
         data[9] = 0x0D;
         data[10] = 0x0D;
     }
 
     private void upload(int[] data) throws IOException {
         Integer id = data[4] * 256 + data[5];
-        String[] addrs = Configs.idMapToIpPort.get(id).split(":");
-        Socket s = new Socket(addrs[0], Integer.valueOf(addrs[1]));
+        Socket s = Configs.idSocketMap.get(id);
         OutputStream os = s.getOutputStream();
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
         for (int i = 0; i != data.length; i++) {

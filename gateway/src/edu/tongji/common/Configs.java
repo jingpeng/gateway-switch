@@ -1,5 +1,6 @@
 package edu.tongji.common;
 
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +27,8 @@ public class Configs {
     //数据长度
     public static int UPLOAD_DATA_COUNT = 13;
 
-    //地锁IP ID map
-    public static Map<Integer, String> idMapToIpPort = new HashMap<>();
+    //地锁ID socket map
+    public static Map<Integer, Socket> idSocketMap = new HashMap<>();
 
     //上报服务器地址
     public static String UPLOAD_URL = "tingche.tongji.edu.cn/httpservices/client/locked/event/new";

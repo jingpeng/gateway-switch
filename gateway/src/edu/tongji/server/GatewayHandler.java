@@ -55,10 +55,11 @@ public class GatewayHandler implements Runnable {
                     value = socket.getInputStream().read();
                     if (value == 0x0A) {
                         if (CommonUtils.checkUploadCRC(data)) {
-                            buildIDMapToIpPort(data);
+                            buildIdSocketMap(data, socket);
                             Map<String ,String> map = generateJson(data);
                             uploadJson(map);
                         }
+                        System.out.println("CRC校验失败:[" + data + "]");
                         //无论校验过不过都需重置data
                         count = 0;
                     } else {
@@ -132,10 +133,10 @@ public class GatewayHandler implements Runnable {
         }
     }
 
-    private void buildIDMapToIpPort(int[] data) {
+    private void buildIdSocketMap(int[] data, Socket socket) {
         Integer id = data[2] * 256 + data[3];
-        if (!Configs.idMapToIpPort.containsKey(id)) {
-            Configs.idMapToIpPort.put(id, ip + ":" + port);
+        if (!Configs.idSocketMap.containsKey(id)) {
+            Configs.idSocketMap.put(id, socket);
         }
     }
 }
