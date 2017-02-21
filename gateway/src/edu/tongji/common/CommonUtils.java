@@ -60,13 +60,16 @@ public class CommonUtils {
 	}
 
 	public static boolean checkUploadCRC(int[] data) {
-		return CRCTool.calcCrc16(data) == data[9] * 16 + data[10];
+		int crc = CRCTool.calcCrc16(data, 0, 9);
+		int crcH = (crc >> 8) & 0xff;
+		int crcL = (crc%0x100) & 0xff;			
+		return (crcH == data[9]) && (crcL == data[10]);
 	}
 	
 	public static int[] fillReverseCRC(int[] data) {
 		int crc = CRCTool.calcCrc16(data, 0, 7);
-		data[7] = (byte)((crc >> 8) & 0xff);
-		data[8] = (byte)(crc%0x100);
+		data[7] = (crc >> 8) & 0xff;
+		data[8] = (crc%0x100)& 0xff;
 		return data;
 	}
 }

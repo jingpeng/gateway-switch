@@ -6,6 +6,7 @@ import edu.tongji.common.Configs;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class ReverseHandler implements Runnable {
 
 	private Socket socket;
 
-	int[] data = new int[Configs.UPLOAD_DATA_COUNT];
+	int[] data = new int[Configs.REVERSE_DATA_COUNT];
 
 	ReverseHandler(Socket socket) {
 		this.socket = socket;
@@ -74,14 +75,17 @@ public class ReverseHandler implements Runnable {
 	}
 
 	private void upload(int[] data) throws IOException {
-		Integer id = data[4] * 256 + data[5];
+		Integer id = data[2] * 256 + data[3];
 		Socket s = Configs.idSocketMap.get(id);
+		if (null == s) {
+			System.out.println("设备未注册，socket为空");
+			return;
+		}
 		OutputStream os = s.getOutputStream();
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
 		for (int i = 0; i != data.length; i++) {
 			bw.write(data[i]);
 		}
 		bw.flush();
-		s.close();
 	}
 }

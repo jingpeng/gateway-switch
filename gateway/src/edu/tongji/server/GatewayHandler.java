@@ -55,11 +55,15 @@ public class GatewayHandler implements Runnable {
                     value = socket.getInputStream().read();
                     if (value == 0x0A) {
                         if (CommonUtils.checkUploadCRC(data)) {
+                        	data[11] = 0x0D;
+                        	data[12] = 0x0A;
                             buildIdSocketMap(data, socket);
                             Map<String ,String> map = generateJson(data);
                             uploadJson(map);
                         }
-                        System.out.println("CRC校验失败:[" + data + "]");
+                        else {
+                        	System.out.println("CRC校验失败:[" + data + "]");
+                        }
                         //无论校验过不过都需重置data
                         count = 0;
                     } else {
@@ -76,6 +80,8 @@ public class GatewayHandler implements Runnable {
     }
 
     private void handleValue(int value) {
+    	if(count >= 13) 
+    		count = 0;
         if (value != -1) {
             data[count] = value;
             count++;
@@ -115,6 +121,7 @@ public class GatewayHandler implements Runnable {
     private void uploadJson(Map<String,String> map) {
         try {
             StringBuilder sb = new StringBuilder();
+            sb.append("http://");
             sb.append(Configs.UPLOAD_URL);
             sb.append("?");
             for (Map.Entry<String, String> entry : map.entrySet()) {

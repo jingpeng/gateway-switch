@@ -26,6 +26,9 @@ public class Configs {
 
     //数据长度
     public static int UPLOAD_DATA_COUNT = 13;
+    
+    //反向控制数据长度
+    public static int REVERSE_DATA_COUNT = 11;
 
     //地锁ID socket map
     public static Map<Integer, Socket> idSocketMap = new HashMap<>();
