@@ -13,30 +13,30 @@ import java.util.concurrent.Executors;
  * Created by mi.li on 16/9/4.
  */
 public class ReverseServer {
-    ServerSocket serverSocket = null;
+	ServerSocket serverSocket = null;
 
-    private ExecutorService executorService;//线程池
+	private ExecutorService executorService;// 线程池
 
-    public ReverseServer() {
-        try {
-            serverSocket = new ServerSocket(Configs.REVERSE_PORT, 50, InetAddress.getByName(Configs.REVERSE_IP));
-            executorService = Executors.newFixedThreadPool(Configs.POOL_SIZE);
-            System.out.println("反向控制器启动");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public ReverseServer() {
+		try {
+			serverSocket = new ServerSocket(Configs.REVERSE_PORT, 50, InetAddress.getByName(Configs.REVERSE_IP));
+			executorService = Executors.newFixedThreadPool(Configs.POOL_SIZE);
+			System.out.println("反向控制器启动");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    public void service() {
-        while (true) {
-            Socket socket = null;
-            try {
-                socket = serverSocket.accept();
-                executorService.execute(new ReverseHandler(socket));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+	public void service() {
+		while (true) {
+			Socket socket = null;
+			try {
+				socket = serverSocket.accept();
+				executorService.execute(new ReverseHandler(socket));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }

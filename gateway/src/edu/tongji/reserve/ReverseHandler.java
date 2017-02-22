@@ -1,14 +1,11 @@
 package edu.tongji.reserve;
 
-import edu.tongji.common.CRCTool;
 import edu.tongji.common.CommonUtils;
 import edu.tongji.common.Configs;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,11 +44,16 @@ public class ReverseHandler implements Runnable {
 					}
 					for (int i = 0; i < map.get("lockArea").length; i++) {
 						generateBytes(map, i);
-						//填充crc
+						// 填充crc
 						CommonUtils.fillReverseCRC(data);
 						upload(data);
 						Thread.sleep(500);
 					}
+
+					PrintStream writer = new PrintStream(socket.getOutputStream(), true);
+					writer.println("HTTP/1.0 200 OK");
+					writer.println();
+					writer.close();
 				}
 				line = bd.readLine();
 			}
