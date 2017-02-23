@@ -1,26 +1,27 @@
-package edu.tongji.server;
-
-import edu.tongji.common.Configs;
+package edu.tongji.cn.gateway;
 
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import edu.tongji.cn.common.Configs;
 
 public class GatewayServer {
 
     ServerSocket serverSocket = null;
 
-    private ExecutorService executorService;//Á∫øÁ®ãÊ±†
+    private ExecutorService executorService;//œﬂ≥Ã≥ÿ
 
     public GatewayServer() {
         try {
             serverSocket = new ServerSocket(Configs.SWITCH_PORT, 50, InetAddress.getByName(Configs.SWITCH_IP));
             executorService = Executors.newFixedThreadPool(Configs.POOL_SIZE);
-            System.out.println("ËΩ¨Êç¢Âô®ÂêØÂä®");
+            System.out.println("◊™ªª∆˜∆Ù∂Ø");
         } catch (IOException e) {
             e.printStackTrace();
         }

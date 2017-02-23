@@ -1,1 +1,0 @@
-java -Djava.ext.dirs=lib edu.tongji.Main
